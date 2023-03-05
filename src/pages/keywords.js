@@ -1,37 +1,60 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from 'react'
+import axios from "axios";
+import { Fragment, useEffect, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import ResultTable from './resultTable'
-
-const people = [
-  { id: 1, name: 'Option 1' },
-  { id: 2, name: 'Option 2' },
-  { id: 3, name: 'Option 3' },
-]
-const dataList = [
-  {plantSpecies: 'Barley', geneName: 'Nucleobase-ascorbic acid transporters (NAT)', hostSpecies: 'Barley', geneSymbol: 'HvNAT2', description: 'Transporter protein', function: 'Resistance to Cadmium tolerance', pathwayCategory: 'Plant-pathogen interaction, mRNA surveillance pathway, mitogen-activated protein kinase (MAPK) signaling pathway and starch and sucrose metabolism', phenotype: 'Cd sensitive and defective chloroplast phenotype', experimentalMethod: 'Overexpression and RNAi', reference: 'Wang et al., 2023', yearOfPublication: '2023', link: 'https://pubmed.ncbi.nlm.nih.gov/36725193/'}
-  ]
+import { appConfig } from "../config";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Keyword() {
-  const [selected, setSelected] = useState(people[0])
+  const [geneMetadata, setGeneMetadata] = useState({});
+  const [selectedSpecies, setSelectedSpecies] = useState('');
+  const [selectedBiologicalFunction, setSelectedBiologicalFunction] = useState('');
+  const [selectedExperimentalMethod, setSelectedExperimentalMethod] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${appConfig.baseUrl}/${appConfig.geneMetadataUri}`).then((response) => {
+      setGeneMetadata(response.data);
+    });
+  }, []);
+
+  const onSearch = () => {
+    const queryParams = {
+      ...(selectedSpecies ? { species: selectedSpecies } : {}),
+      ...(selectedBiologicalFunction
+        ? { function: selectedBiologicalFunction }
+        : {}),
+      ...(selectedExperimentalMethod
+        ? { experimental_method: selectedExperimentalMethod }
+        : {}),
+    };
+    axios
+      .get(`${appConfig.baseUrl}/${appConfig.geneListUri}`, {
+        params: queryParams,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSearchResults(response.data);
+      });
+  };
 
   return (
     <div className="bg-gray-100 md:flex md:items-center md:justify-between py-10 px-10 ">
     
       <div className="flex-1 min-w-0">
       <h2 className="text-4xl font-bold leading-7 text-gray-900  mb-10">Browse/Keywords</h2>
-      <Listbox value={selected} onChange={setSelected}>
+      <Listbox value={selectedSpecies} onChange={setSelectedSpecies}>
       {({ open }) => (
         <>
           <Listbox.Label className="block text-md font-medium text-gray-700">Select species</Listbox.Label>
           <div className="mt-3 mb-5 relative">
             <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              <span className="block truncate">{selected.name}</span>
+              <span className="block truncate">{selectedSpecies || 'Select'}</span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </span>
@@ -44,22 +67,23 @@ export default function Keyword() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                {people.map((person) => (
+              {geneMetadata?.species && 
+              (<Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                {geneMetadata.species.map((speciesName) => (
                   <Listbox.Option
-                    key={person.id}
+                    key={speciesName}
                     className={({ active }) =>
                       classNames(
                         active ? 'text-white bg-indigo-600' : 'text-gray-900',
                         'cursor-default select-none relative py-2 pl-3 pr-9'
                       )
                     }
-                    value={person}
+                    value={speciesName}
                   >
                     {({ selected, active }) => (
                       <>
                         <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
-                          {person.name}
+                          {speciesName}
                         </span>
 
                         {selected ? (
@@ -76,19 +100,19 @@ export default function Keyword() {
                     )}
                   </Listbox.Option>
                 ))}
-              </Listbox.Options>
+              </Listbox.Options>)}
             </Transition>
           </div>
         </>
       )}
     </Listbox>
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selectedBiologicalFunction} onChange={setSelectedBiologicalFunction}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-md font-medium text-gray-700">Select biological function/gene family</Listbox.Label>
+          <Listbox.Label className="block text-md font-medium text-gray-700">Select biological function</Listbox.Label>
           <div className="mt-3 mb-5 relative">
             <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              <span className="block truncate">{selected.name}</span>
+              <span className="block truncate">{selectedBiologicalFunction || 'Select'}</span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </span>
@@ -101,22 +125,23 @@ export default function Keyword() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                {people.map((person) => (
+              {geneMetadata?.biological_functions &&
+              (<Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                {geneMetadata?.biological_functions.map((bioFunctionName) => (
                   <Listbox.Option
-                    key={person.id}
+                    key={bioFunctionName}
                     className={({ active }) =>
                       classNames(
                         active ? 'text-white bg-indigo-600' : 'text-gray-900',
                         'cursor-default select-none relative py-2 pl-3 pr-9'
                       )
                     }
-                    value={person}
+                    value={bioFunctionName}
                   >
                     {({ selected, active }) => (
                       <>
                         <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
-                          {person.name}
+                          {bioFunctionName}
                         </span>
 
                         {selected ? (
@@ -133,20 +158,20 @@ export default function Keyword() {
                     )}
                   </Listbox.Option>
                 ))}
-              </Listbox.Options>
+              </Listbox.Options>)}
             </Transition>
           </div>
         </>
       )}
     </Listbox>
-    
-    <Listbox value={selected} onChange={setSelected}>
+
+    <Listbox value={selectedExperimentalMethod} onChange={setSelectedExperimentalMethod}>
       {({ open }) => (
         <>
           <Listbox.Label className="block text-md font-medium text-gray-700">Select experimental method</Listbox.Label>
           <div className="mt-3 mb-5 relative">
             <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              <span className="block truncate">{selected.name}</span>
+              <span className="block truncate">{selectedExperimentalMethod || 'Select'}</span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </span>
@@ -159,22 +184,23 @@ export default function Keyword() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
+              {geneMetadata?.experimental_methods &&(
               <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                {people.map((person) => (
+                {geneMetadata.experimental_methods.map((expMethod) => (
                   <Listbox.Option
-                    key={person.id}
+                    key={expMethod}
                     className={({ active }) =>
                       classNames(
                         active ? 'text-white bg-indigo-600' : 'text-gray-900',
                         'cursor-default select-none relative py-2 pl-3 pr-9'
                       )
                     }
-                    value={person}
+                    value={expMethod}
                   >
                     {({ selected, active }) => (
                       <>
                         <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
-                          {person.name}
+                          {expMethod}
                         </span>
 
                         {selected ? (
@@ -191,7 +217,7 @@ export default function Keyword() {
                     )}
                   </Listbox.Option>
                 ))}
-              </Listbox.Options>
+              </Listbox.Options>)}
             </Transition>
           </div>
         </>
@@ -199,6 +225,7 @@ export default function Keyword() {
     </Listbox>
     <div className=" flex ">
         <button
+          onClick={onSearch}
           type="button"
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-md font-medium text-white bg-gray-700 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500"
         >
@@ -259,11 +286,16 @@ export default function Keyword() {
               </div>
               
         
-            </div> 
-            <label htmlFor="email" className="block text-md font-medium text-gray-700 mt-10">
+            </div>
+            {searchResults.length > 0 && (
+              <>
+              <label htmlFor="email" className="block text-md font-medium text-gray-700 mt-10">
               Results
               </label>
-      <ResultTable dataList = {dataList}/>
+              <ResultTable dataList = {searchResults}/>
+              </>
+              
+            )}
       </div>
       
     </div>

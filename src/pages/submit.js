@@ -16,6 +16,11 @@
 */
 import { useState } from 'react'
 import { Switch } from '@headlessui/react'
+import axios from 'axios'
+import { useCookies } from 'react-cookie';
+
+import { appConfig } from "../config";
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -23,6 +28,35 @@ function classNames(...classes) {
 
 export default function Submit() {
   const [agreed, setAgreed] = useState(false)
+  const [cookies] = useCookies(["csrftoken"]);
+
+  const formSubmitHandler = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const requestBody = {};
+    for (var [key, value] of formData.entries()) {
+      requestBody[key] = value;
+    }
+
+    axios({
+      method: "post",
+      url: `${appConfig.baseUrl}/${appConfig.geneSuggestUri}`,
+      data: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": cookies.csrftoken,
+      },
+      mode: "same-origin",
+      withCredentials: true,
+    }).then((response) => {
+      if (response.status === 200) {
+        alert("Thank you for contributing to the database!");
+        event.target.reset();
+      } else {
+        alert("Something went wrong, couldn't submit the form.");
+      }
+    });
+  }
 
   return (
     <div className="bg-gray-100 py-16 px-4 overflow-y-auto overflow-x-hidden sm:px-6 lg:px-8 lg:py-24">
@@ -74,22 +108,21 @@ export default function Submit() {
         <div className="text-center">
           <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Submit form</h2>
           <p className="mt-4 text-xl leading-6 text-gray-500">
-            Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus
-            arcu.
+            ---
           </p>
         </div>
         <div className="mt-12">
-          <form action="#" method="POST" className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+          <form onSubmit={formSubmitHandler} className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
             <div>
-              <label htmlFor="first-name" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="first_name" className="block text-lg font-medium text-gray-700">
                 Name*
               </label>
               <div className="mt-1">
                 <input
                 required
                   type="text"
-                  name="first-name"
-                  id="first-name"
+                  name="first_name"
+                  id="first_name"
                   autoComplete="given-name"
                   className="py-3 px-4 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                 />
@@ -156,7 +189,7 @@ export default function Submit() {
               </div>
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="phone-number" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="phone_number" className="block text-lg font-medium text-gray-700">
                 Phone Number
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
@@ -177,8 +210,8 @@ export default function Submit() {
                 <input
                 required
                   type="text"
-                  name="phone-number"
-                  id="phone-number"
+                  name="phone_number"
+                  id="phone_number"
                   autoComplete="tel"
                   className="shadow-sm py-3 px-4 block w-full pl-20 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                   placeholder="    91 9034134181"

@@ -40,25 +40,25 @@ export default function Layout({ children, small = false }) {
         name: "Home",
         href: "/",
         icon: HomeIcon,
-        current: true
+        current: true,
       },
       {
         name: "Database Statistics",
         icon: DatabaseIcon,
         href: "",
-        current: false
+        current: false,
       },
       {
         name: "Download",
         href: "",
         icon: DownloadIcon,
-        current: false
+        current: false,
       },
       {
         name: "Submit",
-        href: "",
+        href: "/submit",
         icon: CheckIcon,
-        current: false
+        current: false,
       },
       {
         name: "Browse",
@@ -68,27 +68,25 @@ export default function Layout({ children, small = false }) {
         childs: [
           {
             name: "Keywords",
-            href: "",
-            current: true
+            href: "/browse-keywords",
+            current: true,
           },
           {
             name: "BLAST",
-            href: "",
-            current: false
+            href: "/browse-blast",
+            current: false,
           },
-          
-        ]
+        ],
       },
       {
         name: "Contact Us",
-        href: "",
+        href: "/contact-us",
         icon: MailIcon,
-        current: false
+        current: false,
       },
-      
     ];
   
-    useEffect(() => {
+    // useEffect(() => {
       // const getNullBrand = async () => {
       //   const merchanId = localStorage.getItem("merchantId");
       //   const data = await getBrand(merchanId);
@@ -106,7 +104,7 @@ export default function Layout({ children, small = false }) {
       //   setData(data);
       // };
       // getNullBrand();
-    }, []);
+    // }, []);
   
     return (
       <div className="h-screen flex   bg-white">
@@ -153,7 +151,10 @@ export default function Layout({ children, small = false }) {
                       onClick={() => setSidebarOpen(false)}
                     >
                       <span className="sr-only">Close sidebar</span>
-                      <XIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                      <XIcon
+                        className="h-6 w-6 text-white"
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
                 </Transition.Child>
@@ -165,33 +166,32 @@ export default function Layout({ children, small = false }) {
                       width={136}
                       height={32}
                     /> */}
-                    
                   </div>
                   <nav className="mt-5 px-2 space-y-1">
                     {navigation.map((item) => (
                       <a key={item.name} href={item.href}>
-                      <Link to={item.href}>
-                      <a
-                          className={classNames(
-                            item.current
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                            "group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                          )}
-                        >
-                          <item.icon
+                        <Link to={item.href}>
+                          <a
+                            key={item.name} href={item.href}
                             className={classNames(
                               item.current
-                                ? "text-gray-500"
-                                : "text-gray-400 group-hover:text-gray-500",
-                              "mr-4 flex-shrink-0 h-6 w-6"
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                              "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                             )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
-                      </Link>
-                        
+                          >
+                            <item.icon
+                              className={classNames(
+                                item.current
+                                  ? "text-gray-500"
+                                  : "text-gray-400 group-hover:text-gray-500",
+                                "mr-4 flex-shrink-0 h-6 w-6"
+                              )}
+                              aria-hidden="true"
+                            />
+                            {item.name}
+                          </a>
+                        </Link>
                       </a>
                     ))}
                   </nav>
@@ -245,13 +245,16 @@ export default function Layout({ children, small = false }) {
             >
               <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto rounded-lg">
                 <div className="flex items-center px-4">
-                <p className="text-white  group flex items-center px-2 text-xl font-medium rounded-md ">D.R.E.A.M. Database</p>
+                  <p className="text-white  group flex items-center px-2 text-xl font-medium rounded-md ">
+                    D.R.E.A.M. Database
+                  </p>
                 </div>
                 <nav className="mt-5 flex-1 px-2 pt-4 bg-gray-800 space-y-1">
                   {navigation.map((item) => (
-                    <p key={item.name} href={item.href}>
+                    <p key={item.name}>
                       <div className="cursor-pointer">
                         <a
+                          href={item.href}
                           className={classNames(
                             item.current
                               ? "bg-gray-900 text-white"
