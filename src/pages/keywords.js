@@ -2,12 +2,16 @@
 import { Fragment, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import ResultTable from './resultTable'
 
 const people = [
   { id: 1, name: 'Option 1' },
   { id: 2, name: 'Option 2' },
   { id: 3, name: 'Option 3' },
 ]
+const dataList = [
+  {plantSpecies: 'Barley', geneName: 'Nucleobase-ascorbic acid transporters (NAT)', hostSpecies: 'Barley', geneSymbol: 'HvNAT2', description: 'Transporter protein', function: 'Resistance to Cadmium tolerance', pathwayCategory: 'Plant-pathogen interaction, mRNA surveillance pathway, mitogen-activated protein kinase (MAPK) signaling pathway and starch and sucrose metabolism', phenotype: 'Cd sensitive and defective chloroplast phenotype', experimentalMethod: 'Overexpression and RNAi', reference: 'Wang et al., 2023', yearOfPublication: '2023', link: 'https://pubmed.ncbi.nlm.nih.gov/36725193/'}
+  ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -17,7 +21,7 @@ export default function Keyword() {
   const [selected, setSelected] = useState(people[0])
 
   return (
-    <div className="bg-gray-100 md:flex md:items-center md:justify-between py-10 px-10">
+    <div className="bg-gray-100 md:flex md:items-center md:justify-between py-10 px-10 ">
     
       <div className="flex-1 min-w-0">
       <h2 className="text-4xl font-bold leading-7 text-gray-900  mb-10">Browse/Keywords</h2>
@@ -256,7 +260,10 @@ export default function Keyword() {
               
         
             </div> 
-
+            <label htmlFor="email" className="block text-md font-medium text-gray-700 mt-10">
+              Results
+              </label>
+      <ResultTable dataList = {dataList}/>
       </div>
       
     </div>

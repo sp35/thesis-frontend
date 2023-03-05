@@ -109,7 +109,7 @@ export default function Layout({ children, small = false }) {
     }, []);
   
     return (
-      <div className="h-screen flex overflow-hidden bg-white">
+      <div className="h-screen flex   bg-white">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -344,7 +344,7 @@ export default function Layout({ children, small = false }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-0 flex-1">
+        <div className="flex flex-col w-0 flex-1 overflow-y-scroll">
           <div className="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
             <button
               type="button"
