@@ -119,7 +119,6 @@ export default function HomePage() {
                         {product.name}
                       </a>
                     </h3>
-                    
                   </div>
                   <p className="mt-1 text-sm text-gray-500">
                     {product.category}
