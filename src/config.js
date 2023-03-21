@@ -1,5 +1,5 @@
 export const appConfig = {
-  baseUrl: "http://localhost:8000",
+  baseUrl: "https://dreamweb.azurewebsites.net",
   geneMetadataUri: `genes/metadata`,
   geneListUri: `genes`,
   geneSuggestUri: `suggest`,
