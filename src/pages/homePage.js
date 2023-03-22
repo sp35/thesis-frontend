@@ -28,7 +28,7 @@ export default function HomePage() {
     <main className="bg-gray-100 flex-1 relative overflow-y-auto focus:outline-none">
       <div className="py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-          <h1 className="text-3xl font-semibold text-gray-900">Home</h1>
+          <h1 className="text-4xl font-semibold text-gray-900">DREAM Database</h1>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="">

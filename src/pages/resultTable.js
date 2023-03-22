@@ -1,20 +1,21 @@
 /* This example requires Tailwind CSS v2.0+ */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ResultTable({
   dataList,
-  setDownloadListFunction,
-  downloadList,
+  addItemToDownload,
+  removeItemFromDownload,
+  downloadList
 }) {
-  function addItemToDownload(dataIdx) {
-    setDownloadListFunction((prevState) => [...prevState, dataList[dataIdx]]);
+  
+  function addValue(event, dataIdx){
+    console.log('adding value: ', dataIdx)
+    addItemToDownload(dataIdx);
   }
-  function removeItemFromDownload(dataIdx) {
-    const tempList = downloadList.filter(
-      (itemToRemove) => itemToRemove.dataIdx !== dataIdx
-    );
-    setDownloadListFunction(tempList);
+  function removeValue(event, dataIdx){
+    console.log('removing value: ', dataIdx)
+    removeItemFromDownload(dataIdx);
   }
   return (
     <div className="flex flex-col mt-5">
@@ -24,6 +25,12 @@ export default function ResultTable({
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
+                <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Select
+                  </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -77,20 +84,19 @@ export default function ResultTable({
                     key={data.geneSymbol}
                     className={dataIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
                   >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <input
                       id="comments"
                       aria-describedby="comments-description"
                       name="comments"
                       type="checkbox"
                       className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                      onClick={
-                        downloadList.includes(data)
-                          ? addItemToDownload
-                          : removeItemFromDownload
-                      }
+                      onClick={event => downloadList.includes(data) ? removeValue(event, dataIdx) : addValue(event, dataIdx)}
                     />
+                    </td>
+                    
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {dataIdx}
+                      {dataIdx+1}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {data?.species?.name}
@@ -127,25 +133,4 @@ export default function ResultTable({
     </div>
   );
 }
-//   {
-//   "id": 5,
-//   "species": {
-//     "id": 3,
-//     "name": "Sorghum bicolor"
-//   },
-//   "name": "SbMyb60",
-//   "host": "Sorghum",
-//   "transcription_factor": "MYB Transcription Factor",
-//   "symbol": "SbMyb60",
-//   "description": "MYB Transcription Factor",
-//   "family": "MYB Transcription Factor",
-//   "accession_number": "Sobic.004G273800",
-//   "function": "Lignin biosynthesis and deposition, cell wall biosynthesis",
-//   "pathway_category": "Cell Wall Biosynthesis",
-//   "phenotype": "Ectopic lignification in leaf midribs and elevated concentrations of soluble phenolic compounds in biomass",
-//   "experimental_method": "Overexpression",
-//   "references": "Scully et al, 2016:\nScully et al, 2018",
-//   "year": "2016\n2018",
-//   "publication_link": "https://pubmed.ncbi.nlm.nih.gov/28944535/\nhttps://pubmed.ncbi.nlm.nih.gov/26712107/",
-//   "approved": true
-// }
+

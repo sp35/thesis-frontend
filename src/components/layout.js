@@ -47,12 +47,7 @@ export default function Layout({ children, small = false }) {
       href: "",
       current: false,
     },
-    {
-      name: "Download",
-      href: "",
-      icon: DownloadIcon,
-      current: false,
-    },
+    
     {
       name: "Submit",
       href: "/submit",

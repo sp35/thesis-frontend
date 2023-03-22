@@ -22,6 +22,32 @@ export default function Keyword() {
   const [downloadList, setDownloadList] = useState([]);
   var today = new Date();
 
+  function addItemToDownload(dataIdx) {
+    setDownloadList((prevState) => [...prevState, searchResults[dataIdx]]);
+  }
+  function removeItemFromDownload(dataIdx) {
+    const tempList = downloadList.filter(
+      (itemToRemove) => itemToRemove !== searchResults[dataIdx]
+    );
+    setDownloadList(tempList);
+  }
+  useEffect(() => {
+    console.log('Download List: ', downloadList)
+  }, [downloadList]);
+
+  function downloadSelectedRows(){
+    if(downloadList.length > 0){
+      exportToExcel(
+        downloadList,
+        "list-of-millets_" + today.toLocaleDateString("en-GB")
+        )
+      alert("Downloaded selected rows!");
+    }
+    else{
+      alert('Selected rows to download')
+    }
+}
+
   useEffect(() => {
     axios
       .get(`${appConfig.baseUrl}/${appConfig.geneMetadataUri}`)
@@ -45,7 +71,7 @@ export default function Keyword() {
         params: queryParams,
       })
       .then((response) => {
-        console.log(response.data);
+        console.log('Search response data: ', response.data);
         setSearchResults(response.data);
       });
   };
@@ -360,8 +386,8 @@ export default function Keyword() {
             {exportToExcel(
               downloadList,
               "list-of-millets_" + today.toLocaleDateString("en-GB")
-            )
-            alert("Downloaded selected rows!");}
+              )
+            alert("Downloaded selected rows!");} 
           }
         >
           Download selected rows as Excel
@@ -391,7 +417,8 @@ export default function Keyword() {
             </label>
             <ResultTable
               dataList={searchResults}
-              setDownloadListFunction={setDownloadList}
+              addItemToDownload={addItemToDownload}
+              removeItemFromDownload={removeItemFromDownload}
               downloadList={downloadList}
             />
           </>
