@@ -2,5 +2,5 @@ export const appConfig = {
   baseUrl: "https://dreamweb.azurewebsites.net",
   geneMetadataUri: `genes/metadata`,
   geneListUri: `genes`,
-  geneSuggestUri: `suggest`,
+  geneSuggestUri: `genes/suggest`,
 };

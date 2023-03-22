@@ -99,7 +99,7 @@ export default function ResultTable({
                       {dataIdx+1}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {data?.species?.name}
+                      {data?.species_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {data?.name}
