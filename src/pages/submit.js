@@ -20,6 +20,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 
 import { appConfig } from "../config";
+import Layout from "../components/layout";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -68,6 +69,7 @@ export default function Submit() {
   };
 
   return (
+    <Layout>
     <div className="bg-gray-100 py-16 px-4 overflow-y-auto overflow-x-hidden sm:px-6 lg:px-8 lg:py-24">
       <div className="relative max-w-xl mx-auto">
         <svg
@@ -410,5 +412,6 @@ export default function Submit() {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

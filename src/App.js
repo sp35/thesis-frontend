@@ -6,20 +6,21 @@ import Contact from './pages/contact';
 import Download from './pages/download';
 import HomePage from './pages/homePage';
 import Keyword from './pages/keywords';
+import LandingPage from './pages/landingPage';
 import ResultTable from './pages/resultTable';
 import Submit from './pages/submit';
 
 function App() {
   return (
     <Router>
-      <Layout>
+      
         <Routes>
-          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/" element={<LandingPage />} />
           <Route path="/browse-keywords" element={<Keyword />} />
           <Route path="/contact-us" element={<Contact />} />
           <Route path="/submit" element={<Submit />} />
         </Routes>
-      </Layout>
+      
     </Router>
   );
 }

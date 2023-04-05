@@ -1,6 +1,9 @@
+import Layout from "../components/layout";
+
 /* This example requires Tailwind CSS v2.0+ */
 export default function Contact() {
   return (
+    <Layout>
     <div className="bg-gray-100 h-screen content-center">
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-24 lg:px-8">
         <div className="divide-y-2 divide-gray-200">
@@ -107,5 +110,6 @@ export default function Contact() {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

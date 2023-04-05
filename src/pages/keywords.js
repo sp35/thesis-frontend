@@ -6,6 +6,7 @@ import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import ResultTable from "./resultTable";
 import { appConfig } from "../config";
 import { exportToExcel } from "react-json-to-excel";
+import Layout from "../components/layout";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -77,6 +78,7 @@ export default function Keyword() {
   };
 
   return (
+    <Layout>
     <div className="bg-gray-100 md:flex md:items-center md:justify-between py-10 px-10 ">
       <div className="flex-1 min-w-0">
         <h2 className="text-4xl font-bold leading-7 text-gray-900  mb-10">
@@ -425,5 +427,6 @@ export default function Keyword() {
         )}
       </div>
     </div>
+    </Layout>
   );
 }
